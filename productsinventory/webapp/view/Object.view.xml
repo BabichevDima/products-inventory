@@ -1,35 +1,89 @@
-<mvc:View
-    controllerName="products.inventory.productsinventory.controller.Object"
-    xmlns="sap.m"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:semantic="sap.f.semantic">
-
-    <semantic:SemanticPage
-        id="page"
-        headerPinnable="false"
-        toggleHeaderOnTitleClick="false"
-        busy="{objectView>/busy}"
-        busyIndicatorDelay="{objectView>/delay}">
-
+<mvc:View controllerName="products.inventory.productsinventory.controller.Object" xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.f.semantic">
+    <semantic:SemanticPage id="page" headerPinnable="false" toggleHeaderOnTitleClick="false" busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}">
         <semantic:titleHeading>
-            <Title
-                text="{ProductName}"
-                level="H2"/>
+            <Title text="{ProductName}" level="H2" />
         </semantic:titleHeading>
 
+        <semantic:titleBreadcrumbs>
+            <Breadcrumbs currentLocationText="{ProductName}">
+                <Link press=".onNavBack" text="{i18n>breadcrumbsNavBackTitle}" />
+            </Breadcrumbs>
+        </semantic:titleBreadcrumbs>
+
         <semantic:headerContent>
-            <ObjectNumber
-                number="{
+            <ObjectNumber number="{
                     path: 'UnitPrice',
                     formatter: '.formatter.numberUnit'
-                }"
-                unit="{QuantityPerUnit}" />
+                }" unit="{QuantityPerUnit}" />
         </semantic:headerContent>
 
+        <semantic:content>
+            <VBox>
+                <form:SimpleForm title="{i18n>objectSupplierInfo}" layout="ResponsiveGridLayout" singleContainerFullSize="false" columnsXL="1" columnsL="1" visible="{= ${objectView>/busy} ? false : true}">
+                    <form:content>
+                        <Label text="{i18n>objectSupplierID}" />
+                        <Text text="{Supplier/SupplierID}" />
+                        <Label text="{i18n>objectCompanyName}" />
+                        <Text text="{Supplier/CompanyName}" />
+                        <Label text="{i18n>objectContactName}" />
+                        <Text text="{Supplier/ContacName}" />
+                        <Label text="{i18n>objectContactTitle}" />
+                        <Text text="{Supplier/ContactTitle}" />
+                        <Label text="{i18n>objectAddress}" />
+                        <Text text="{Supplier/Address}, {Supplier/City}, {Supplier/PostalCode}, {Supplier/Country}" />
+                    </form:content>
+                </form:SimpleForm>
+
+                <Table inset="false" items="{Order_Details}" visible="{= ${objectView>/busy} ? false : true}">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title id="tableHeader" text="{i18n>objectTableTitle}" level="H3" />
+                            <ToolbarSpacer />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column>
+                            <Text text="{i18n>objectTableOrderIDColumnTitle}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>objectTableUnitPriceColumnTitle}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>objectTableQuantityColumnTitle}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>objectTableDiscountColumnTitle}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>objectTableShipmentDetailsColumnTitle}" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive">
+                            <cells>
+                                <ObjectIdentifier title="{OrderID}" />
+                                <ObjectNumber number="{
+                                    path: 'UnitPrice',
+                                    formatter: '.formatter.numberUnit'
+                                    }" unit="EUR" />
+                                <ObjectNumber number="{
+                                    path: 'Quantity',
+                                    formatter: '.formatter.numberUnit'
+                                    }" unit="EUR" />
+                                <ObjectNumber number="{
+                                    path: 'Discount',
+                                    formatter: '.formatter.percent'
+                                    }" unit="%" />
+                                <Link text="View shipment details" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </semantic:content>
+
         <semantic:sendEmailAction>
-            <semantic:SendEmailAction id="shareEmail" press=".onShareEmailPress"/>
+            <semantic:SendEmailAction id="shareEmail" press=".onShareEmailPress" />
         </semantic:sendEmailAction>
-
     </semantic:SemanticPage>
-
 </mvc:View>

@@ -50,6 +50,12 @@
                         <Column id="unitNumberColumn" hAlign="End">
                             <Text text="{i18n>tableUnitNumberColumnTitle}" id="unitNumberColumnTitle" />
                         </Column>
+                        <Column hAlign="End">
+                            <Text text="{i18n>worklistTableUnitsOrderedColumnTitle}" />
+                        </Column>
+                        <Column hAlign="End">
+                            <Text text="{i18n>worklistTableUnitsInStockColumnTitle}" />
+                        </Column>
                     </columns>
 
                     <items>
@@ -60,6 +66,8 @@
                                         path: 'UnitPrice',
                                         formatter: '.formatter.numberUnit'
                                     }" unit="{QuantityPerUnit}" />
+                                <ObjectNumber number="{path: 'UnitsOnOrder', formatter: 'formatter.numberUnit'}" unit="PC" />
+                                <ObjectNumber number="{path: 'UnitsInStock', formatter: 'formatter.numberUnit'}" unit="PC" />
                             </cells>
                         </ColumnListItem>
                     </items>
