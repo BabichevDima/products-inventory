@@ -20,14 +20,14 @@ stages:
   Compliance:
     sonarExecuteScan: false
   Release:
-    cloudFoundryDeploy: false
+    cloudFoundryDeploy: true
+    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
+    cfOrg: "SAP_<MyProject>"
+    cfSpace: "<My Project>-<dev>"
+    cfCredentialsId: "cfdeploy"
     tmsUpload: false
 steps:
   artifactPrepareVersion:
     versioningType: "cloud_noTag"
   cloudFoundryDeploy:
-    deployTool: 'cf_native'
-    cloudFoundry:
-      org: "SAP_<MyProject>"
-      space: "<My Project>-<dev>"
-      credentialsId: "cfdeploy"
+    mtaDeployParameters: "-f --version-rule ALL"
