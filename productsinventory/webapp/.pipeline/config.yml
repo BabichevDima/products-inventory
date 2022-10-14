@@ -1,4 +1,3 @@
----
 general:
   buildTool: "mta"
 service:
@@ -27,4 +26,8 @@ steps:
   artifactPrepareVersion:
     versioningType: "cloud_noTag"
   cloudFoundryDeploy:
-    mtaDeployParameters: "-f --version-rule ALL"
+    deployTool: 'cf_native'
+    cloudFoundry:
+      org: "SAP_<MyProject>"
+      space: "<My Project>-<dev>"
+      credentialsId: "cfdeploy"
