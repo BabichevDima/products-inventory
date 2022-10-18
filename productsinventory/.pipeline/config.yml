@@ -3,7 +3,7 @@ general:
 
 steps:
   cloudFoundryDeploy:
-    deployTool: 'cfdeploy'
+    deployTool: 'mta'
     cloudFoundry:
       org: 'SAP_<MyProject>'
       space: '<My Project>-<dev>'
@@ -12,3 +12,5 @@ steps:
     newmanCollection: 'myNewmanCollection.file'
     newmanEnvironment: 'myNewmanEnvironment'
     newmanGlobals: 'myNewmanGlobals'
+  gaugeExecuteTests:
+    buildTool: 'maven'
