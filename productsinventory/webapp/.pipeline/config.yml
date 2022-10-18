@@ -37,7 +37,7 @@ general:
 
 steps:
   cloudFoundryDeploy:
-    deployTool: 'mta'
+    deployTool: 'cfdeploy'
     cloudFoundry:
       org: 'SAP_<MyProject>'
       space: '<My Project>-<dev>'
