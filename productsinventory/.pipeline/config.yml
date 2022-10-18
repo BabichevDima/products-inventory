@@ -1,16 +1,33 @@
 general:
-  gitSshKeyCredentialsId: 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
-
+  buildTool: "mta"
+service:
+  buildToolVersion: "MBTJ8N14"
+stages:
+  Build:
+    npmExecuteLint: false
+  Additional Unit Tests:
+    npmExecuteScripts: false
+    karmaExecuteTests: false
+  Malware Scan:
+    malwareExecuteScan: true
+  Acceptance:
+    cloudFoundryDeploy: true
+    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
+    cfOrg: "SAP_<MyProject>"
+    cfSpace: "<My Project>-<dev>"
+    cfCredentialsId: "cfdeploy"
+    npmExecuteEndToEndTests: false
+  Compliance:
+    sonarExecuteScan: false
+  Release:
+    cloudFoundryDeploy: true
+    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
+    cfOrg: "SAP_<MyProject>"
+    cfSpace: "<My Project>-<dev>"
+    cfCredentialsId: "cfdeploy"
+    tmsUpload: false
 steps:
+  artifactPrepareVersion:
+    versioningType: "cloud_noTag"
   cloudFoundryDeploy:
-    deployTool: 'cfdeploy'
-    cloudFoundry:
-      org: 'SAP_<MyProject>'
-      space: '<My Project>-<dev>'
-      credentialsId: 'cfdeploy'
-  newmanExecute:
-    newmanCollection: 'myNewmanCollection.file'
-    newmanEnvironment: 'myNewmanEnvironment'
-    newmanGlobals: 'myNewmanGlobals'
-  gaugeExecuteTests:
-    buildTool: 'maven'
+    mtaDeployParameters: "-f --version-rule ALL"
