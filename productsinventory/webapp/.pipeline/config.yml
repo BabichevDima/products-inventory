@@ -1,63 +1,33 @@
-# general:
-#   buildTool: "mta"
-# service:
-#   buildToolVersion: "MBTJ8N14"
-# stages:
-#   Build:
-#     npmExecuteLint: false
-#   Additional Unit Tests:
-#     npmExecuteScripts: false
-#     karmaExecuteTests: false
-#   Malware Scan:
-#     malwareExecuteScan: true
-#   Acceptance:
-#     cloudFoundryDeploy: true
-#     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
-#     cfOrg: "SAP_<MyProject>"
-#     cfSpace: "<My Project>-<dev>"
-#     cfCredentialsId: "cfdeploy"
-#     npmExecuteEndToEndTests: false
-#   Compliance:
-#     sonarExecuteScan: false
-#   Release:
-#     cloudFoundryDeploy: true
-#     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
-#     cfOrg: "SAP_<MyProject>"
-#     cfSpace: "<My Project>-<dev>"
-#     cfCredentialsId: "cfdeploy"
-#     tmsUpload: false
-# steps:
-#   artifactPrepareVersion:
-#     versioningType: "cloud_noTag"
-#   cloudFoundryDeploy:
-#     mtaDeployParameters: "-f --version-rule ALL"
-
-
+general:
+  buildTool: "mta"
+service:
+  buildToolVersion: "MBTJ8N14"
+stages:
+  Build:
+    npmExecuteLint: false
+  Additional Unit Tests:
+    npmExecuteScripts: false
+    karmaExecuteTests: false
+  Malware Scan:
+    malwareExecuteScan: true
+  Acceptance:
+    cloudFoundryDeploy: true
+    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
+    cfOrg: "SAP_<MyProject>"
+    cfSpace: "<My Project>-<dev>"
+    cfCredentialsId: "cfdeploy"
+    npmExecuteEndToEndTests: false
+  Compliance:
+    sonarExecuteScan: false
+  Release:
+    cloudFoundryDeploy: true
+    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
+    cfOrg: "SAP_<MyProject>"
+    cfSpace: "<My Project>-<dev>"
+    cfCredentialsId: "cfdeploy"
+    tmsUpload: false
 steps:
-  githubPublishRelease:
-    addClosedIssues: true
-    addDeltaToLastRelease: true
-    excludeLabels:
-      - 'discussion'
-      - 'duplicate'
-      - 'invalid'
-      - 'question'
-      - 'wontfix'
-      - 'stale'
-    owner: 'SAP'
-    repository: 'jenkins-library'
-    releaseBodyHeader: ''
-  githubCreatePullRequest:
-    base: master
-    owner: 'SAP'
-    repository: 'jenkins-library'
-    labels:
-      - 'REVIEW'
-      - 'go-piper'
-    assignees:
-      - 'marcusholl'
-      - 'daniel-kurzynski'
-      - 'fwilhe'
-      - 'CCFenner'
-      - 'OliverNocon'
-      - 'nevskrem'
+  artifactPrepareVersion:
+    versioningType: "cloud_noTag"
+  cloudFoundryDeploy:
+    mtaDeployParameters: "-f --version-rule ALL"
