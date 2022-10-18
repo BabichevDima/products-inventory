@@ -31,3 +31,12 @@ steps:
     versioningType: "cloud_noTag"
   cloudFoundryDeploy:
     mtaDeployParameters: "-f --version-rule ALL"
+  testsPublishResults:
+    htmlPublisher:
+      allowMissing: true
+      alwaysLinkToLastBuild: false
+      keepAll: true
+      reportDir: ""
+      pattern: "**/reports/coverage-reports/**/index.html"
+      reportName: "Results"
+      active: false
