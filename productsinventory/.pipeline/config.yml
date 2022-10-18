@@ -31,3 +31,9 @@ steps:
     versioningType: "cloud_noTag"
   cloudFoundryDeploy:
     mtaDeployParameters: "-f --version-rule ALL"
+
+  gaugeExecuteTests:
+    buildTool: 'maven'
+    
+  seleniumExecuteTests:
+    buildTool: 'npm'
