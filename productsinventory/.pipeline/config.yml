@@ -1,16 +1,16 @@
-general:
-  gitSshKeyCredentialsId: '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'
-steps:
-  cloudFoundryDeploy:
-    deployTool: 'mta'
-    cloudFoundry:
-      org: 'SAP_<MyProject>'
-      space: '<My Project>-<dev>'
-      credentialsId: 'cfdeploy'
-  newmanExecute:
-    newmanCollection: 'myNewmanCollection.file'
-    newmanEnvironment: 'myNewmanEnvironment'
-    newmanGlobals: 'myNewmanGlobals'
+# general:
+#   gitSshKeyCredentialsId: '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'
+# steps:
+#   cloudFoundryDeploy:
+#     deployTool: 'mta'
+#     cloudFoundry:
+#       org: 'SAP_<MyProject>'
+#       space: '<My Project>-<dev>'
+#       credentialsId: 'cfdeploy'
+#   newmanExecute:
+#     newmanCollection: 'myNewmanCollection.file'
+#     newmanEnvironment: 'myNewmanEnvironment'
+#     newmanGlobals: 'myNewmanGlobals'
 
 
 
