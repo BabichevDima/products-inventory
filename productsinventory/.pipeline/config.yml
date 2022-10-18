@@ -1,5 +1,5 @@
 general:
-  buildTool: 'maven'
+  buildDescriptorPattern: 'mta.yaml'
 service:
   buildToolVersion: "MBTJ8N14"
 stages:
