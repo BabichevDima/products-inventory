@@ -20,12 +20,39 @@ stages:
   Compliance:
     sonarExecuteScan: false
   Release:
-    cloudFoundryDeploy: true
-    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
-    cfOrg: "SAP_<MyProject>"
-    cfSpace: "<My Project>-<dev>"
-    cfCredentialsId: "cfdeploy"
-    tmsUpload: false
+  cloudFoundryDeploy:
+    cloudFoundry:
+      apiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com'
+    apiParameters: ''
+    loginParameters: ''
+    deployType: 'standard'
+    keepOldInstance: false
+    cfNativeDeployParameters: ''
+    mtaDeployParameters: '-f'
+    mtaExtensionDescriptor: ''
+    mtaPath: ''
+    smokeTestScript: 'blueGreenCheckScript.sh'
+    smokeTestStatusCode: 200
+    stashContent:
+      - 'deployDescriptor'
+      - 'pipelineConfigAndTests'
+    cf_native:
+      dockerImage: 'ppiper/cf-cli:latest'
+      dockerWorkspace: '/home/piper'
+    mtaDeployPlugin:
+      dockerImage: 'ppiper/cf-cli:latest'
+      dockerWorkspace: '/home/piper'
+    mta:
+      deployTool: 'mtaDeployPlugin'
+    maven:
+      deployTool: 'cf_native'
+    npm:
+      deployTool: 'cf_native'
+    docker:
+      deployTool: 'cf_native'
+    kaniko:
+      deployTool: 'cf_native'
+
 steps:
   artifactPrepareVersion:
     versioningType: "cloud_noTag"
