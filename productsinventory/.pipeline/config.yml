@@ -1,5 +1,5 @@
 general:
-  gitSshKeyCredentialsId: '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'
+  buildTool: 'maven'
 steps:
   cloudFoundryDeploy:
     deployTool: 'mta'
