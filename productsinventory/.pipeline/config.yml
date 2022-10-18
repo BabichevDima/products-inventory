@@ -11,7 +11,7 @@ stages:
   Malware Scan:
     malwareExecuteScan: true
   Acceptance:
-    cloudFoundryDeploy: true
+    cloudFoundryDeploy: false
     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
     cfOrg: "SAP_<MyProject>"
     cfSpace: "<My Project>-<dev>"
@@ -20,7 +20,7 @@ stages:
   Compliance:
     sonarExecuteScan: false
   Release:
-    cloudFoundryDeploy: true
+    cloudFoundryDeploy: false
     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
     cfOrg: "SAP_<MyProject>"
     cfSpace: "<My Project>-<dev>"
