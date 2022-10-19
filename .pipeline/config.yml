@@ -19,7 +19,7 @@ stages:
      malwareExecuteScan: false                                        # true, if you want your pipeline to execute malware scanning (default: false) 
 
   Acceptance:
-    cloudFoundryDeploy: true                                          # true, if you want to deploy to Cloud Foundry test space (default: false)
+    cloudFoundryDeploy: false                                          # true, if you want to deploy to Cloud Foundry test space (default: false)
     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com" 
     cfOrg: "SAP_<MyProject>"
     cfSpace: "<My Project>-<dev>"                               
@@ -30,7 +30,7 @@ stages:
     sonarExecuteScan: false                                           # true, if you want to integrate continuous inspection of code quality (default: false). If you set this parameter to true, the sonarExecuteScan step is mandatory
 
 Release:
-    cloudFoundryDeploy: true                                     # true, if you want to deploy to Cloud Foundry (default: false)
+    cloudFoundryDeploy: false                                     # true, if you want to deploy to Cloud Foundry (default: false)
     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"   # for example, https://api.cf.eu10.hana.ondemand.com
     cfOrg: "SAP_<MyProject>"
     cfSpace: "<My Project>-<dev>"                                # enter the Cloud Foundry space, to which you want to deploy your application
@@ -69,8 +69,8 @@ steps:
 #     sonarTokenCredentialsId: "<SONARQUBE CREDENTIAL>"            # credential of type "Secret Text", containing the token that was generated when creating your SonarQube project
 
 # Release stage steps 
-  cloudFoundryDeploy:                                                                      # only relevant, if you set the cloudFoundryDeploy parameter in the Release stage to true 
-    mtaDeployParameters: "-f --version-rule ALL"
+  # cloudFoundryDeploy:                                                                      # only relevant, if you set the cloudFoundryDeploy parameter in the Release stage to true 
+  #   mtaDeployParameters: "-f --version-rule ALL"
 
   # tmsUpload:                                                                               # only relevant, if you set the tmsUpload parameter in the Release stage to true
   #   nodeName: "<NAME OF THE NODE FOR THE UPLOAD TO SAP CLOUD TRANSPORT MANAGEMENT>"
