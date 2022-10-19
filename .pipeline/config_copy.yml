@@ -1,80 +1,96 @@
+# Project configuration
 general:
-  buildTool: 'mta'
-  productiveBranch: 'main'
-  pipelineOptimization: true
-  gitHttpsCredentialsId: 'cfdeploy'
-  # vaultAppRoleTokenCredentialsId: 'vault-approle-role-id-1741-8994'
-  # vaultAppRoleSecretTokenCredentialsId: 'vault-approle-secret-id-accessor-1741-8994'
-  # vaultBasePath: 'piper/PIPELINE-GROUP-1741'
-  # vaultPipelineName: 'PIPELINE-8994'
-  # vaultServerUrl: 'https://vault.tools.sap'
-  vaultNamespace: 'ies/hyperspace/pipelines'
+  buildTool: "mta"
+
+service: 
+  buildToolVersion: "MBTJ11N14"           
+
+# Stage configuration
 stages:
-  Central Build:
-    sapXmakeExecuteBuild: true
-    sonarExecuteScan: false
-    npmExecuteLint: false
-    karmaExecuteTests: false
-    testsPublishResults: false
+
+  Build:
+    npmExecuteLint: false                                             # true, if you want to run a lint check that verifies the syntax of your JavaScript code (default: false)
+  
+  Additional Unit Tests:
+     karmaExecuteTests: false                                         # true, if you want to execute the Karma Test Runner (default: false) 
+     npmExecuteScripts: false                                         # true, if you want to execute test scripts that are defined in step npmExecuteScripts (default: false)
+
+  Malware Scan: 
+     malwareExecuteScan: false                                        # true, if you want your pipeline to execute malware scanning (default: false) 
+
   Acceptance:
-    cloudFoundry:
-      credentialsId: 'cfdeploy'
-      apiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com'
-      org: 'SAP_<MyProject>'
-      space: '<My Project>-<dev>'
-      # mtaExtensionDescriptor: './mta-extensions/dev-mtaext.yaml'
-    # deployTool: 'mtaDeployPlugin'
-    testServerUrl: 'https://api.cf.us10-001.hana.ondemand.com'
-    mtaDeployParameters: '--version-rule ALL -f'
-  # Performance:
-  #   cfApiEndpoint: https://api.cf.eu10.hana.ondemand.com
-  #   cfOrg: sap-learning-qa
-  #   cfSpace: test.com.sap.learning.builder
-  #   cfManifest: manifest.yaml
-  #   testServerUrl:  https://api.cf.eu10.hana.ondemand.com
-  #   cfCredentialsId: 'hyperspace-scpcf-dl_5e01a0e6eab84c02946fdb17@global.corp.sap'
-  Release:
-    cfApiEndpoint: https://api.cf.us10-001.hana.ondemand.com
-    cfOrg: SAP_<MyProject>
-    cfSpace: SAP_<MyProject>
-    cfManifest: manifest.yaml
-    testServerUrl:  https://api.cf.us10-001.hana.ondemand.com
-    cfCredentialsId: 'cfdeploy'
+    cloudFoundryDeploy: true                                          # true, if you want to deploy to Cloud Foundry test space (default: false)
+    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com" 
+    cfOrg: "SAP_<MyProject>"
+    cfSpace: "<My Project>-<dev>"                               
+    cfCredentialsId: "cfdeploy"
+    npmExecuteEndToEndTests: false                                    # true, if you want to execute end-to-end acceptance tests using WebdriverIO (default: false)
+
+  Compliance:
+    sonarExecuteScan: false                                           # true, if you want to integrate continuous inspection of code quality (default: false). If you set this parameter to true, the sonarExecuteScan step is mandatory
+
+Release:
+    cloudFoundryDeploy: true                                     # true, if you want to deploy to Cloud Foundry (default: false)
+    cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"   # for example, https://api.cf.eu10.hana.ondemand.com
+    cfOrg: "SAP_<MyProject>"
+    cfSpace: "<My Project>-<dev>"                                # enter the Cloud Foundry space, to which you want to deploy your application
+    cfAppName: "Procurement"   
+    cfCredentialsId: "cfdeploy"
+    tmsUpload: false                                              # true, if you want to upload your artifact to SAP Cloud Transport Management
+
+
+# Step configuration
 steps:
-  mtaBuild:
-    mtaBuildTool: cloudMbt
-  executeBuild:
-    jobNamePattern: 'Procurement'
-    xMakeNovaCredentialsId: 'hyperspace-xmake-c5316007'
-  # whitesourceExecuteScan:
-  #   whitesourceProductName: 'SHC - COM-SAP-LEARNING-BUILDER-EXPERIENCE'
-  #   whitesourceProductToken: '2223efe18c8949c5bf3653debc2280c0c389cdcb8f1c495f956a1dc0a86a60c7'
-  #   stashContent:
-  #   - buildDescriptor
-  #   - opensourceConfiguration
-  #   - classFiles
-  #   - tests
-  #   whitesourceUserTokenCredentialsId: 'hyperspace-whitesource-com-sap-learning-builder-experience'
-  # sonarExecuteScan:
-  #   serverUrl: 'https://sonar.wdf.sap.corp'
-  #   sonarTokenCredentialsId: 'hyperspace-sonar-i308033'
-  #   instance: 'SAP SonarQube Enterprise'
-  #   projectKey: 'com.sap.learning.builder.experience'
-  # checkmarxExecuteScan:
-  #   projectName: 'com-sap-learning-builder-experience'
-  #   teamName: '/CxServer/SP/SAP/INTERNAL/LEARNING_EXPERIENCE'
-  #   preset: 'SAP_Default_TypeScript_JavaScript' #default preset
-  # sapCumulusUpload:
-  #   pipelineId: '43502c07-8c05-49d0-b79a-c6ee88b1ffc4'
-  #   cumulusFileCredentialsId: 'hyperspace-cumulusupload-1741'
-  downloadArtifactsFromNexus:
-    disableLegacyNaming: true
-    artifactType: 'mta'
-    #group: 'com.sap.ibx'
-    verbose: true
-    buildTool: 'mta'
-    fromStaging: true
-    #nexusUrl: 'https://nexus.wdf.sap.corp:8443'  
+
+# Init stage step 
+  artifactPrepareVersion: 
+    versioningType: "cloud_noTag"       # or "cloud", if you want your pipeline to write Git tags. In this case, you need to add the gitHttpsCredentialsId parameter
+
+  npmExecuteLint: 
+    failOnError: false                  # true, if you want your pipeline to fail, if the lint check reveals any errors
+
+# # Test stage step 
+#   npmExecuteScripts:                    # only relevant, if you set the npmExecuteScripts parameter in the Additional Unit Tests stage to true
+#     runScripts: 
+#       - "test"                          # list of script names in your package.json file to be executed 
+
+# Acceptance stage steps 
+  cloudFoundryDeploy: false         # true, if you want to deploy to Cloud Foundry test space (default: false)
+  # npmExecuteEndToEndTests:          # only relevant, if you set the npmExecuteEndToEndTests parameter in the Accepance stage to true
+  #   runScript: "<wdio>"             # enter the name of the test script to be executed (you can find it in the scripts section of your package.json file) (default: "wdio")                      
+  #   baseUrl: "<BASE URL>"           # enter the URL from the Application Routes section of your application from your SAP, BTP subaccount                       														      								
+  #   credentialsId: "<ID OF YOUR CREDENTIAL TO AUTHENTICATE AGAINST THE TEST APPLICATION>"  # tip: avoid using a technical user credential and create a special test user instead 
+
+# # Complaince stage steps 
+#   sonarExecuteScan:
+#     serverUrl: "<SONARQUBE SERVER URL>"                          # "https://sonarcloud.io" for SonarCloud and custom URL to your internet-facing SonarQube server for SonarQube
+#     organization: "<SONARCLOUD ORGANIZATION>"                    # only relevant for the SonarCloud configuration mode
+#     projectKey: "<SONARQUBE PROJECT KEY>"                        # project key that you provided for your SonarQube project                                   
+#     sonarTokenCredentialsId: "<SONARQUBE CREDENTIAL>"            # credential of type "Secret Text", containing the token that was generated when creating your SonarQube project
+
+# Release stage steps 
+  cloudFoundryDeploy:                                                                      # only relevant, if you set the cloudFoundryDeploy parameter in the Release stage to true 
+    mtaDeployParameters: "-f --version-rule ALL"
+
+  # tmsUpload:                                                                               # only relevant, if you set the tmsUpload parameter in the Release stage to true
+  #   nodeName: "<NAME OF THE NODE FOR THE UPLOAD TO SAP CLOUD TRANSPORT MANAGEMENT>"
+  #   credentialsId: "<ID OF YOUR CREDENTIAL TO AUTHENTICATE AGAINST SAP CLOUD TRANSPORT MANAGEMENT>"
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -87,77 +103,165 @@ steps:
 
 
 # general:
-#   buildTool: 'maven'
-# steps:
-#   cloudFoundryDeploy:
-#     deployTool: 'mta'
-#     cloudFoundry:
-#       org: 'SAP_<MyProject>'
-#       space: '<My Project>-<dev>'
-#       credentialsId: 'cfdeploy'
-#   newmanExecute:
-#     newmanCollection: 'myNewmanCollection.file'
-#     newmanEnvironment: 'myNewmanEnvironment'
-#     newmanGlobals: 'myNewmanGlobals'
-
-
-
-
-# general:
-#   buildTool: "mta"
-# service:
-#   buildToolVersion: "MBTJ8N14"
+#   buildTool: 'mta'
+#   productiveBranch: 'main'
+#   pipelineOptimization: true
+#   gitHttpsCredentialsId: 'cfdeploy'
+#   # vaultAppRoleTokenCredentialsId: 'vault-approle-role-id-1741-8994'
+#   # vaultAppRoleSecretTokenCredentialsId: 'vault-approle-secret-id-accessor-1741-8994'
+#   # vaultBasePath: 'piper/PIPELINE-GROUP-1741'
+#   # vaultPipelineName: 'PIPELINE-8994'
+#   # vaultServerUrl: 'https://vault.tools.sap'
+#   vaultNamespace: 'ies/hyperspace/pipelines'
 # stages:
-#   Build:
-#     npmExecuteLint: false
-#   Additional Unit Tests:
-#     npmExecuteScripts: false
-#     karmaExecuteTests: false
-#   Malware Scan:
-#     malwareExecuteScan: true
-#   Acceptance:
-#     cloudFoundryDeploy: true
-#     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
-#     cfOrg: "SAP_<MyProject>"
-#     cfSpace: "<My Project>-<dev>"
-#     cfCredentialsId: "cfdeploy"
-#     npmExecuteEndToEndTests: false
-#   Compliance:
+#   Central Build:
+#     sapXmakeExecuteBuild: true
 #     sonarExecuteScan: false
-#   Release:
-#     cloudFoundryDeploy: true
-#     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
-#     cfOrg: "SAP_<MyProject>"
-#     cfSpace: "<My Project>-<dev>"
-#     cfCredentialsId: "cfdeploy"
-#     tmsUpload: false
-# steps:
-#   artifactPrepareVersion:
-#     versioningType: "cloud_noTag"
-#   cloudFoundryDeploy:
-#     mtaDeployParameters: "-f --version-rule ALL"
-
-
-
-
-
-# general:
-#   gitSshKeyCredentialsId: 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
-
-# steps:
-#   cloudFoundryDeploy:
-#     deployTool: 'mta'
+#     npmExecuteLint: false
+#     karmaExecuteTests: false
+#     testsPublishResults: false
+#   Acceptance:
 #     cloudFoundry:
+#       credentialsId: 'cfdeploy'
+#       apiEndpoint: 'https://api.cf.us10-001.hana.ondemand.com'
 #       org: 'SAP_<MyProject>'
 #       space: '<My Project>-<dev>'
-#       credentialsId: 'cfdeploy'
+#       # mtaExtensionDescriptor: './mta-extensions/dev-mtaext.yaml'
+#     # deployTool: 'mtaDeployPlugin'
+#     testServerUrl: 'https://api.cf.us10-001.hana.ondemand.com'
+#     mtaDeployParameters: '--version-rule ALL -f'
+#   # Performance:
+#   #   cfApiEndpoint: https://api.cf.eu10.hana.ondemand.com
+#   #   cfOrg: sap-learning-qa
+#   #   cfSpace: test.com.sap.learning.builder
+#   #   cfManifest: manifest.yaml
+#   #   testServerUrl:  https://api.cf.eu10.hana.ondemand.com
+#   #   cfCredentialsId: 'hyperspace-scpcf-dl_5e01a0e6eab84c02946fdb17@global.corp.sap'
+#   Release:
+#     cfApiEndpoint: https://api.cf.us10-001.hana.ondemand.com
+#     cfOrg: SAP_<MyProject>
+#     cfSpace: SAP_<MyProject>
+#     cfManifest: manifest.yaml
+#     testServerUrl:  https://api.cf.us10-001.hana.ondemand.com
+#     cfCredentialsId: 'cfdeploy'
+# steps:
+#   mtaBuild:
+#     mtaBuildTool: cloudMbt
+#   executeBuild:
+#     jobNamePattern: 'Procurement'
+#     xMakeNovaCredentialsId: 'hyperspace-xmake-c5316007'
+#   # whitesourceExecuteScan:
+#   #   whitesourceProductName: 'SHC - COM-SAP-LEARNING-BUILDER-EXPERIENCE'
+#   #   whitesourceProductToken: '2223efe18c8949c5bf3653debc2280c0c389cdcb8f1c495f956a1dc0a86a60c7'
+#   #   stashContent:
+#   #   - buildDescriptor
+#   #   - opensourceConfiguration
+#   #   - classFiles
+#   #   - tests
+#   #   whitesourceUserTokenCredentialsId: 'hyperspace-whitesource-com-sap-learning-builder-experience'
+#   # sonarExecuteScan:
+#   #   serverUrl: 'https://sonar.wdf.sap.corp'
+#   #   sonarTokenCredentialsId: 'hyperspace-sonar-i308033'
+#   #   instance: 'SAP SonarQube Enterprise'
+#   #   projectKey: 'com.sap.learning.builder.experience'
+#   # checkmarxExecuteScan:
+#   #   projectName: 'com-sap-learning-builder-experience'
+#   #   teamName: '/CxServer/SP/SAP/INTERNAL/LEARNING_EXPERIENCE'
+#   #   preset: 'SAP_Default_TypeScript_JavaScript' #default preset
+#   # sapCumulusUpload:
+#   #   pipelineId: '43502c07-8c05-49d0-b79a-c6ee88b1ffc4'
+#   #   cumulusFileCredentialsId: 'hyperspace-cumulusupload-1741'
+#   downloadArtifactsFromNexus:
+#     disableLegacyNaming: true
+#     artifactType: 'mta'
+#     #group: 'com.sap.ibx'
+#     verbose: true
+#     buildTool: 'mta'
+#     fromStaging: true
+#     #nexusUrl: 'https://nexus.wdf.sap.corp:8443'  
 
-# hooks:
-#   splunk:
-#     dsn: 'YOUR SPLUNK HEC ENDPOINT'
-#     token: 'YOURTOKEN'
-#     index: 'SPLUNK INDEX'
-#     sendLogs: true
+
+
+
+
+
+
+
+
+
+
+# # general:
+# #   buildTool: 'maven'
+# # steps:
+# #   cloudFoundryDeploy:
+# #     deployTool: 'mta'
+# #     cloudFoundry:
+# #       org: 'SAP_<MyProject>'
+# #       space: '<My Project>-<dev>'
+# #       credentialsId: 'cfdeploy'
+# #   newmanExecute:
+# #     newmanCollection: 'myNewmanCollection.file'
+# #     newmanEnvironment: 'myNewmanEnvironment'
+# #     newmanGlobals: 'myNewmanGlobals'
+
+
+
+
+# # general:
+# #   buildTool: "mta"
+# # service:
+# #   buildToolVersion: "MBTJ8N14"
+# # stages:
+# #   Build:
+# #     npmExecuteLint: false
+# #   Additional Unit Tests:
+# #     npmExecuteScripts: false
+# #     karmaExecuteTests: false
+# #   Malware Scan:
+# #     malwareExecuteScan: true
+# #   Acceptance:
+# #     cloudFoundryDeploy: true
+# #     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
+# #     cfOrg: "SAP_<MyProject>"
+# #     cfSpace: "<My Project>-<dev>"
+# #     cfCredentialsId: "cfdeploy"
+# #     npmExecuteEndToEndTests: false
+# #   Compliance:
+# #     sonarExecuteScan: false
+# #   Release:
+# #     cloudFoundryDeploy: true
+# #     cfApiEndpoint: "https://api.cf.us10-001.hana.ondemand.com"
+# #     cfOrg: "SAP_<MyProject>"
+# #     cfSpace: "<My Project>-<dev>"
+# #     cfCredentialsId: "cfdeploy"
+# #     tmsUpload: false
+# # steps:
+# #   artifactPrepareVersion:
+# #     versioningType: "cloud_noTag"
+# #   cloudFoundryDeploy:
+# #     mtaDeployParameters: "-f --version-rule ALL"
+
+
+
+
+
+# # general:
+# #   gitSshKeyCredentialsId: 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
+
+# # steps:
+# #   cloudFoundryDeploy:
+# #     deployTool: 'mta'
+# #     cloudFoundry:
+# #       org: 'SAP_<MyProject>'
+# #       space: '<My Project>-<dev>'
+# #       credentialsId: 'cfdeploy'
+
+# # hooks:
+# #   splunk:
+# #     dsn: 'YOUR SPLUNK HEC ENDPOINT'
+# #     token: 'YOURTOKEN'
+# #     index: 'SPLUNK INDEX'
+# #     sendLogs: true
 
 
 
