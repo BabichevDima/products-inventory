@@ -44,7 +44,7 @@ steps:
 #     runScripts: 
 #       - "test"                          # list of script names in your package.json file to be executed 
 # Acceptance stage steps 
-  cloudFoundryDeploy: false           # true, if you want to deploy to Cloud Foundry test space (default: false)
+  # cloudFoundryDeploy: false           # true, if you want to deploy to Cloud Foundry test space (default: false)
   # npmExecuteEndToEndTests:          # only relevant, if you set the npmExecuteEndToEndTests parameter in the Accepance stage to true
   #   runScript: "<wdio>"             # enter the name of the test script to be executed (you can find it in the scripts section of your package.json file) (default: "wdio")                      
   #   baseUrl: "<BASE URL>"           # enter the URL from the Application Routes section of your application from your SAP, BTP subaccount                       														      								
