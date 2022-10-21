@@ -1,0 +1,30 @@
+# Generated manifest.yml based on template version 0.1.0
+# appName = productsinventory
+# language=nodejs
+# multitenancy=false
+---
+applications:
+# -----------------------------------------------------------------------------------
+# Backend Service
+# -----------------------------------------------------------------------------------
+- name: productsinventory-
+  random-route: true  # for development only
+  path: .
+  memory: 256M
+  buildpack: nodejs_buildpack
+  services:
+  - productsinventory-db
+  - productsinventory-auth
+
+# -----------------------------------------------------------------------------------
+# HANA Database Content Deployer App
+# -----------------------------------------------------------------------------------
+- name: productsinventory-db-deployer
+  path: db
+  no-route: true
+  health-check-type: process
+  memory: 256M
+  instances: 1
+  buildpack: nodejs_buildpack
+  services:
+  - productsinventory-db
